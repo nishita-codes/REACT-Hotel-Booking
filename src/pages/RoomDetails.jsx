@@ -122,11 +122,22 @@ const RoomDetails = () => {
            </div>
 
            {/* hosted by */}
-           <div className='flex felx-col items-start gap-4'>
-            <div>
+           <div className='flex flex-col items-start gap-4'>
+            <div className='flex '>
                 <img src={room.hotel.owner.image} alt="Host"  className='h-14 w-14 md:h-18 md:w-18 rounded-full'/>
+                <div className='ml-3 items-center'>
+                    <p className='text-lg md:text-xl'>Hosted by {room.hotel.name}</p>
+                    <div className='flex items-center mt-1'>
+                        <StarRating/>
+                        <p className='ml-2 '>200+ reviews</p>
+                    </div>
+                </div>
             </div>
            </div>
+           
+           <button className='px-6 py-2.5 mt-4 rounded text-white bg-primary hover:bg-primary-dull transition-all cursor-pointer'>
+            Contact Now
+           </button>
         </div>
 
     )
