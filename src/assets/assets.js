@@ -189,7 +189,34 @@ export const roomsDummyData = [
         "createdAt": "2025-04-10T06:23:20.252Z",
         "updatedAt": "2025-04-10T06:23:20.252Z",
         "__v": 0
-    }
+    },
+    {
+        "_id": "67f76406197ac559e4089b82",
+        "hotel": hotelDummyData,
+        "roomType": "Double Bed",
+        "pricePerNight": 249,
+        "amenities": ["Free WiFi", "Free Breakfast", "Room Service"],
+        "images": [roomImg3, roomImg4, roomImg1, roomImg2],
+        "isAvailable": true,
+        "createdAt": "2025-04-10T06:24:06.285Z",
+        "updatedAt": "2025-04-10T06:24:06.285Z",
+        "__v": 0
+    },
+    {
+        "_id": "67f76452197ac559e4089b8e",
+        "hotel": hotelDummyData,
+        "roomType": "Double Bed",
+        "pricePerNight": 299,
+        "amenities": ["Room Service", "Mountain View", "Pool Access"],
+        "images": [roomImg2, roomImg3, roomImg4, roomImg1],
+        "isAvailable": true,
+        "createdAt": "2025-04-10T06:25:22.593Z",
+        "updatedAt": "2025-04-10T06:25:22.593Z",
+        "__v": 0
+    },
+    
+ 
+    
 ]
 
 
