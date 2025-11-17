@@ -191,7 +191,7 @@ export const roomsDummyData = [
         "__v": 0
     },
     {
-        "_id": "67f76406197ac559e4089b82",
+        "_id": "67f76406197ac559e4089b87",
         "hotel": hotelDummyData,
         "roomType": "Double Bed",
         "pricePerNight": 249,
@@ -203,7 +203,7 @@ export const roomsDummyData = [
         "__v": 0
     },
     {
-        "_id": "67f76452197ac559e4089b8e",
+        "_id": "67f76452197ac559e4089b8f",
         "hotel": hotelDummyData,
         "roomType": "Double Bed",
         "pricePerNight": 299,
