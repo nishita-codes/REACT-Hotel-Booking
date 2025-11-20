@@ -4,17 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { useUser, useAuth } from "@clerk/clerk-react";
 import toast from 'react-hot-toast';
 
-axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
+// only set axios baseURL if provided
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+if (BACKEND_URL) {
+    axios.defaults.baseURL = BACKEND_URL;
+}
+
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
     const currency = import.meta.env.VITE_CURRENCY || '$';
-    let navigate;
-    try {
-        navigate = useNavigate();
-    } catch (error) {
-        navigate = null;
-    }
+    // call hook at top level (must be inside a Router in your app)
+    const navigate = useNavigate();
     const { user } = useUser();
     const { getToken } = useAuth();
 
@@ -25,16 +26,12 @@ export const AppProvider = ({ children }) => {
     // fetch user data from backend
     const fetchUser = async () => {
         try {
-            const token = await getToken(); // get auth token
-            const BASE = import.meta.env.VITE_BACKEND_URL;
+            const token =  await getToken() ; // get auth token if available
+            const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-            const { data } = await axios.get(`${BASE}/api/user`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const { data } = await axios.get('/api/user/', { headers });
 
-            if (data.success) {
+            if (data && data.success) {
                 setIsOwner(data.role === 'hotel-owner');
                 // ensure recent cities are unique and limited to 3
                 const uniqueCities = Array.from(new Set(data.recentSearchCities || []));
@@ -46,7 +43,7 @@ export const AppProvider = ({ children }) => {
                 }, 5000);
             }
         } catch (error) {
-            toast.error(error.message);
+            toast.error(error?.message || 'Error fetching user');
         }
     }
 
