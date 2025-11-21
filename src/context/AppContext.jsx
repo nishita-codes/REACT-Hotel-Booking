@@ -5,9 +5,9 @@ import { useUser, useAuth } from "@clerk/clerk-react";
 import toast from 'react-hot-toast';
 
 // only set axios baseURL if provided
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL=import.meta.env.VITE_BACKEND_URL;
 if (BACKEND_URL) {
-    axios.defaults.baseURL = BACKEND_URL;
+    axios.defaults.baseURL=BACKEND_URL;
 }
 
 const AppContext = createContext();
@@ -22,15 +22,26 @@ export const AppProvider = ({ children }) => {
     const [isOwner, setIsOwner] = useState(false);
     const [ShowHotelReg, setShowHotelReg] = useState(false);
     const [recentSearchedCities, setRecentSearchedCities] = useState([]); // renamed
+    const [rooms, setRooms] = useState([]); 
+
+
+    const fetchRooms = async()=>{
+        try {
+            const {data} = await axios.get('/api/rooms')
+            if(data.success){
+                setRooms(data.rooms)
+            }else{
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
 
     // fetch user data from backend
-    const fetchUser = async () => {
+    const fetchUser = async() => {
         try {
-            const token =  await getToken() ; // get auth token if available
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-            const { data } = await axios.get('/api/user/', { headers });
-
+           const {data} = await axios.get('/api/user', {headers: {Authorization: `Bearer ${await getToken()}`}})
             if (data && data.success) {
                 setIsOwner(data.role === 'hotel-owner');
                 // ensure recent cities are unique and limited to 3
@@ -51,7 +62,11 @@ export const AppProvider = ({ children }) => {
         if (user) {
             fetchUser();
         }
-    }, [user]);
+    },[user]);
+
+    useEffect(()=>{
+        fetchRooms();
+    },[])
 
     const value = {
         currency,
@@ -64,7 +79,9 @@ export const AppProvider = ({ children }) => {
         setShowHotelReg,
         axios,
         recentSearchedCities,
-        setRecentSearchedCities
+        setRecentSearchedCities,
+        rooms,
+        setRooms
     }
 
     return (
