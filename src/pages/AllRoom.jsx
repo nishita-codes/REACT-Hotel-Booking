@@ -30,7 +30,7 @@ const AllRoom = () => {
     const [openfilters, setOpenfilters] = useState(false);
     const [selectedFilters, setSelectedFilters] = useState({
         roomType:[],
-        priceRange:null,
+        priceRange:[],
     });
     const [selectedSort , setSelectedSort] = useState('');
 
@@ -58,9 +58,9 @@ const AllRoom = () => {
     // Handle changes for filters and sorting
     const handleFilterChange = (checked , value , type)=>{
         setSelectedFilters((prev)=>{
-           const updatedFilters = {...prevFilters};
+           const updatedFilters = {...prev};
            if(checked){
-            updatedFilters[type].push(value);
+             updatedFilters[type] = [...updatedFilters[type], value];
 
            }else{
             updatedFilters[type] = updatedFilters[type].filter(item => item !== value);
@@ -145,7 +145,7 @@ const AllRoom = () => {
                             </div>
                             {/* room Amenities */}
                             <div className='flex flex-wrap items-center mt-3 mb-6 gap-4'>
-                                {room.amenities.map((item, index) => (
+                                {(room.amenities || []).map((item, index) => (
                                     <div key={index} className='flex items-center gap-2 px-3 py-2 rounded-lg bg-[#F5F5FF]/70'>
                                         <img src={facilityIcons[item]} alt={item} className='w-5 h-5' />
                                         <p className='text-xs'>{item}</p>
@@ -179,13 +179,13 @@ const AllRoom = () => {
                     <div className='px-5 pt-5'>
                         <p className='font-medium text-gray-800 pb-2'>Price Range</p>
                         {priceRanges.map((range, index) => (
-                            <CheckBox key={index} label={`$${currency} ${range}`} selected={selectedFilters.priceRange.includes(range)} onChange={(checked)=>handleFilterChange(checked,range,'priceRange')} />
+                            <CheckBox key={index} label={`${currency} ${range}`} selected={selectedFilters.priceRange.includes(range)} onChange={(checked)=>handleFilterChange(checked, range,'priceRange')} />
                         ))}
                     </div>
                     <div className='px-5 pt-5 pb-7'>
                         <p className='font-medium text-gray-800 pb-2'>Sort By</p>
                         {sortOptions.map((option, index) => (
-                            <RadioButton key={index} label={option} />
+                            <RadioButton key={index} label={option} selected={selectedSort === option} onChange={(checked)=>handleSortChange(option)}/>
                         ))}
                     </div>
                 </div>

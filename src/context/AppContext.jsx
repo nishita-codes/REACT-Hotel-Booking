@@ -13,7 +13,7 @@ if (BACKEND_URL) {
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-    const currency = import.meta.env.VITE_CURRENCY || '$';
+    const currency=import.meta.env.VITE_CURRENCY || '$';
     // call hook at top level (must be inside a Router in your app)
     const navigate = useNavigate();
     const { user } = useUser();

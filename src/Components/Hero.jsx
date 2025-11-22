@@ -60,12 +60,16 @@
 // export default Hero
 
 
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { assets, cities } from '../assets/assets'
+import { useAppContext } from '../context/AppContext';
 
 const Hero = () => {
 
-  // ✅ Add your background images here
+const {navigate , axios , getToken} = useAppContext();
+  const [destination , setDestination] = useState('');
+
+  // Add your background images here
   const bgImages = [
     "/src/assets/heroImage.png",
     "/src/assets/heroImage2.png",
@@ -74,7 +78,7 @@ const Hero = () => {
 
   const [currentImage, setCurrentImage] = useState(0);
 
-  // ✅ Auto change background every 5 sec
+  // Auto change background every 5 sec
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % bgImages.length);
@@ -82,6 +86,23 @@ const Hero = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  const onSearch = async(e) =>{
+    e.preventDefault();
+    navigate(`/rooms?destination=${destination}`);
+    // call api to save recent searched city
+    await axios.post('/api/user/recent-search-city',{recentSearchedcity: destination},{headers : {Authorization: `Bearer ${await getToken()}`}});
+
+    // add destination to searchedcities max 3 recent searched cities
+    setSearchedCities((prevSearchedCities)=>{
+      const updateSearchedCities = [...prevSearchedCities , destination];
+      if(updateSearchedCities.length > 3){
+        updateSearchedCities.shift(); //remove older
+      }
+      return updateSearchedCities;
+    })
+  }
+
 
   return (
     <div
@@ -106,7 +127,7 @@ const Hero = () => {
       </p>
 
       {/* ✅ FORM STARTS */}
-      <form className='bg-white text-gray-500 rounded-lg px-6 py-4 mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto'>
+      <form onSubmit={onSearch} className='bg-white text-gray-500 rounded-lg px-6 py-4 mt-8 flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto'>
 
         {/* DESTINATION */}
         <div>
@@ -114,7 +135,7 @@ const Hero = () => {
             <img src={assets.calenderIcon} alt="" className='h-4' />
             <label htmlFor="destinationInput">Destination</label>
           </div>
-          <input
+          <input onChange={e=> setDestination(e.target.value)} value={destination}
             list='destinations'
             id="destinationInput"
             type="text"
